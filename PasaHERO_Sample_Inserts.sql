@@ -25,14 +25,13 @@ VALUES
 ('AAA0007', 'bartoleme.alan@example.com', 'barry123');
 
 -- Route
-INSERT INTO route (route_id, route_name, city, operating_jeepney_count, total_distance)
+INSERT INTO route (route_id, route_name, city, available_jeepney_count, total_distance)
 VALUES
-('RAA0001', 'Cubao - Marikina', 'Quezon City', 0, 4.00),
-('RAA0002', 'Lucena City Proper - Calmar Homes', 0, 5.10),
-('RAA0003', 'Lucena City Proper - Gulang - Gulang', 0, 4.90),
-('RAA0004', 'Lucena City Proper - Site', 0, 4.70),
-('RAA0005', 'Lucena - Lucban', 0, 22.2);
-
+('RAA0001', 'Lucena City Proper - Calmar Homes', 'Lucena', 0, 5.10),
+('RAA0002', 'Lucena City Proper - Gulang - Gulang', 'Lucena', 0, 4.90),
+('RAA0003', 'Lucena City Proper - Site', 'Lucena', 0, 4.70),
+('RAA0004', 'Lucena - Lucban', 'Lucena', 0, 22.2),
+('RAA0005', 'Cubao - Marikina', 'Quezon', 0, 4.00);
 -- Fare
 -- ?REMOVE?
 INSERT INTO fare (route_id, standard_amount, distance_threshold)
@@ -44,7 +43,7 @@ VALUES
 ('RAA0005', 13.00, 4);
 
 -- Landmarks
-INSERT INTO landmark (route_id, landmark)
+INSERT INTO landmark (route_id, landmark_name)
 VALUES
 ('RAA0001', 'Gateway Mall'),
 ('RAA0001', 'Katipunan Station'),
@@ -91,6 +90,7 @@ VALUES
 INSERT INTO contact_detail (account_id, contact_number)
 VALUES
 ('AAA0004', '09285553344'),
+('AAA0004', '0421719089'),
 ('AAA0006', '0423731748');
 
 -- Operating jeepney
@@ -116,10 +116,10 @@ VALUES
 -- Seating
 INSERT INTO seating (seating_id, account_id, jeepney_id, no_charge)
 VALUES
-('AAAA0001', 'PAS0001', 'JTA0001', FALSE),
-('AAAA0002', 'PAS0001', 'JTA0002', FALSE),
-('AAAA0003', 'PAS0002', 'JTA0002', FALSE),
-('AAAA0004', 'PAS0003', 'JTA0002', TRUE);
+('AAAA0001', 'AAA0001', 'JTA0001', FALSE),
+('AAAA0002', 'AAA0001', 'JTA0002', FALSE),
+('AAAA0003', 'AAA0002', 'JTA0002', FALSE),
+('AAAA0004', 'AAA0003', 'JTA0002', TRUE);
 
 -- Payment
 INSERT INTO payment (seating_id, gcash_reference_number, time_paid, amount)
@@ -134,10 +134,20 @@ INSERT INTO travel_information (seating_id, entry_time, entry_coordinate, exit_t
 VALUES
 ('AAAA0001', NOW(), '-14.6000, 120.9850', NULL, NULL, 1.5),
 ('AAAA0002', NOW(), '-14.6035, 121.0025', NOW(), '-14.6069, 121.0005', 3.8),
-('AAAA0003', NOW(), '-14.6060, 121.0060', NULL, NULL, 1.3);
+('AAAA0003', NOW(), '-14.6060, 121.0060', NULL, NULL, 1.3),
 ('AAAA0004', NOW(), '-14.6060, 121.0060', NULL, NULL, 1.3);
 
--- CHECK DATA
+
+-- UPDATE ROUTE.available_jeepney_count
+UPDATE ROUTE
+SET available_jeepney_count = (
+	SELECT COUNT(oj.jeepney_id)
+	FROM operating_jeepney oj
+	JOIN jeepney j ON oj.jeepney_id = j.jeepney_id
+	WHERE j.route_id = 'ROU0001'
+	AND j.availability = TRUE)
+WHERE route_id = 'ROU0001';
+-- Check data
 
 SELECT * FROM account;
 SELECT * FROM login_information;

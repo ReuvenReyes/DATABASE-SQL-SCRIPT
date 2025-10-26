@@ -26,7 +26,7 @@ CREATE TABLE route (
   route_id VARCHAR(7) PRIMARY KEY, 
   route_name VARCHAR(64) NOT NULL,
   city VARCHAR(16),
-  operating_jeepney_count INT,
+  available_jeepney_count INT,
   total_distance DECIMAL(5,2)
 );
 
@@ -42,8 +42,8 @@ CREATE TABLE fare (
 -- LANDMARK TABLE
 CREATE TABLE landmark (
   route_id VARCHAR(7) NOT NULL,
-  landmark VARCHAR(64) NOT NULL,
-  PRIMARY KEY (route_id, landmark),
+  landmark_name VARCHAR(64) NOT NULL,
+  PRIMARY KEY (route_id, landmark_name),
   FOREIGN KEY (route_id) REFERENCES route(route_id)
     ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -59,8 +59,9 @@ CREATE TABLE driver (
 
 -- CONTACT DETAIL TABLE
 CREATE TABLE contact_detail (
-  account_id VARCHAR(7) PRIMARY KEY,
+  account_id VARCHAR(7) NOT NULL,
   contact_number VARCHAR(32) NOT NULL,
+  PRIMARY KEY(account_id, contact_number),
   FOREIGN KEY (account_id) REFERENCES account(account_id)
     ON DELETE CASCADE ON UPDATE CASCADE
 );
