@@ -138,7 +138,7 @@ VALUES
 -- Boarding information
 INSERT INTO boarding_information (seating_id, entry_time, entry_coordinate, exit_time, exit_coordinate)
 VALUES
-('AAAA0001', NOW(), '-14.6000, 120.9850', NULL, NULL),
+('AAAA0001', NOW(), '-14.6000, 120.9850', NOW(), '-14.2001, 121.0456'),
 ('AAAA0002', NOW(), '-14.6000, 120.9850', NULL, NULL),
 ('AAAA0003', NOW(), '-14.6060, 121.0060', NOW(), '-14.6960, 121.0050'),
 ('AAAA0004', NOW(), '-14.6060, 121.0060', NULL, NULL),
@@ -155,7 +155,7 @@ VALUES
 ('AAAA0005', 1.55),
 ('AAAA0006', 1.55);
 
--- UPDATE all ROUTE.available_jeepney_count
+-- UPDATE all ROUTE.available_jeepney_count to get proper count
 SET SQL_SAFE_UPDATES = 0;
 UPDATE ROUTE as r
 SET available_jeepney_count = (
@@ -165,7 +165,13 @@ SET available_jeepney_count = (
 	WHERE j.route_id = r.route_id
 	AND j.availability = TRUE);
 SET SQL_SAFE_UPDATES = 1;
-    
+
+-- UPDATE all ACCOUNT.password to be encrypted
+SET SQL_SAFE_UPDATES = 0;
+UPDATE login_information
+SET password = SHA(password);
+SET SQL_SAFE_UPDATES = 1;
+
 -- Check data
 
 SELECT * FROM account;
