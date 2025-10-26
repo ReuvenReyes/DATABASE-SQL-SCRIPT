@@ -1,3 +1,5 @@
+USE pasahero_schema;
+
 -- View for all available jeepneys sorted by route
 CREATE OR REPLACE VIEW available_jeepney AS
 SELECT r.route_id, d.driver_id, j.jeepney_id, r.route_name, a.full_name AS driver_name, j.license_plate, j.type AS jeepney_type
