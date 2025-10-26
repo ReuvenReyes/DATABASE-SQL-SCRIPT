@@ -84,7 +84,7 @@ CREATE TABLE operating_jeepney (
 -- PASSENGER TABLE
 CREATE TABLE passenger (
   account_id VARCHAR(7) PRIMARY KEY,
-  auto_pay_enabled BOOLEAN DEFAULT TRUE,
+  auto_pay_enabled BOOLEAN DEFAULT TRUE NOT NULL,
   discount_type ENUM('student', 'senior', 'disability'),
   FOREIGN KEY (account_id) REFERENCES account(account_id)
     ON DELETE CASCADE ON UPDATE CASCADE
