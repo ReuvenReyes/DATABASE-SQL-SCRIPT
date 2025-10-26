@@ -1,5 +1,5 @@
-DROP DATABASE IF EXISTS pasahero_schema;
-CREATE DATABASE pasahero_schema;
+DROP SCHEMA IF EXISTS pasahero_schema;
+CREATE SCHEMA pasahero_schema;
 USE pasahero_schema;
 
 -- ACCOUNT TABLE
@@ -20,11 +20,12 @@ CREATE TABLE login_information (
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+
 -- ROUTE TABLE
 CREATE TABLE route (
   route_id VARCHAR(7) PRIMARY KEY, 
-  route_name VARCHAR(32) NOT NULL,
-  city VARCHAR(32),
+  route_name VARCHAR(64) NOT NULL,
+  city VARCHAR(16),
   operating_jeepney_count INT,
   total_distance DECIMAL(5,2)
 );
@@ -41,21 +42,12 @@ CREATE TABLE fare (
 -- LANDMARK TABLE
 CREATE TABLE landmark (
   route_id VARCHAR(7) NOT NULL,
-  landmark VARCHAR(32) NOT NULL,
+  landmark VARCHAR(64) NOT NULL,
   PRIMARY KEY (route_id, landmark),
   FOREIGN KEY (route_id) REFERENCES route(route_id)
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- JEEPNEY TABLE
-CREATE TABLE jeepney (
-  jeepney_id VARCHAR(7) PRIMARY KEY, 
-  license_plate VARCHAR(7) NOT NULL,
-  route_id VARCHAR(7),
-  availability BOOLEAN DEFAULT TRUE,
-  FOREIGN KEY (route_id) REFERENCES route(route_id)
-    ON DELETE SET NULL ON UPDATE CASCADE
-);
 
 -- DRIVER TABLE
 CREATE TABLE driver (
@@ -67,10 +59,22 @@ CREATE TABLE driver (
 
 -- CONTACT DETAIL TABLE
 CREATE TABLE contact_detail (
-  driver_id VARCHAR(7) PRIMARY KEY,
+  account_id VARCHAR(7) PRIMARY KEY,
   contact_number VARCHAR(32) NOT NULL,
-  FOREIGN KEY (driver_id) REFERENCES driver(driver_id)
+  FOREIGN KEY (account_id) REFERENCES account(account_id)
     ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+-- JEEPNEY TABLE
+CREATE TABLE jeepney (
+  jeepney_id VARCHAR(7) PRIMARY KEY, 
+  license_plate VARCHAR(7) NOT NULL,
+  type ENUM('trad', 'modern') NOT NULL,
+  route_id VARCHAR(7),
+  availability BOOLEAN DEFAULT TRUE,
+  FOREIGN KEY (route_id) REFERENCES route(route_id)
+    ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- OPERATING JEEPNEY TABLE
@@ -84,30 +88,32 @@ CREATE TABLE operating_jeepney (
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+
 -- PASSENGER TABLE
 CREATE TABLE passenger (
-  passenger_id VARCHAR(7) PRIMARY KEY, 
-  account_id VARCHAR(7) NOT NULL,
+  account_id VARCHAR(7) PRIMARY KEY,
   auto_pay_enabled BOOLEAN DEFAULT TRUE,
+  discount_type ENUM('student', 'senior', 'disability'),
   FOREIGN KEY (account_id) REFERENCES account(account_id)
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- DISCOUNT QUALIFICATION TABLE
-CREATE TABLE discount_qualification (
-  passenger_id VARCHAR(7) PRIMARY KEY,
-  type VARCHAR(32),
-  FOREIGN KEY (passenger_id) REFERENCES passenger(passenger_id)
-    ON DELETE CASCADE ON UPDATE CASCADE
-);
+-- -- DISCOUNT QUALIFICATION TABLE
+-- CREATE TABLE discount_qualification (
+--   passenger_id VARCHAR(7) PRIMARY KEY,
+--   type ENUM('student', 'senior', 'disability') VARCHAR(32),
+--   FOREIGN KEY (passenger_id) REFERENCES passenger(passenger_id)
+--     ON DELETE CASCADE ON UPDATE CASCADE
+-- );
+
 
 -- SEATING TABLE
 CREATE TABLE seating (
   seating_id VARCHAR(8) PRIMARY KEY, 
-  passenger_id VARCHAR(7),
+  account_id VARCHAR(7),
   jeepney_id VARCHAR(7),
   no_charge BOOLEAN DEFAULT FALSE,
-  FOREIGN KEY (passenger_id) REFERENCES passenger(passenger_id)
+  FOREIGN KEY (account_id) REFERENCES passenger(account_id)
     ON DELETE SET NULL ON UPDATE CASCADE,
   FOREIGN KEY (jeepney_id) REFERENCES jeepney(jeepney_id)
     ON DELETE SET NULL ON UPDATE CASCADE
@@ -119,7 +125,6 @@ CREATE TABLE payment (
   gcash_reference_number VARCHAR(16),
   time_paid DATETIME,
   amount DECIMAL(5,2),
-  -- is_paid BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (seating_id) REFERENCES seating(seating_id)
     ON DELETE CASCADE ON UPDATE CASCADE
 );
