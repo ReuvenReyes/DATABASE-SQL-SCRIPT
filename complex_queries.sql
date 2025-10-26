@@ -1,9 +1,24 @@
 USE pasahero_schema;
 
+-- Get account_id, password from email
+SELECT account_id, password
+FROM login_information
+WHERE email = 'amira.delacruz@example.com';
+
+-- Get ACCOUNT row from account_id
+SELECT * 
+FROM account 
+WHERE account_id = 'AAA0001';
+
+-- Get login information of account
+SELECT * 
+FROM login_information 
+WHERE account_id = 'AAA0001';
+
 -- Get integer amount of OPERATING_JEEPNEY 
 SELECT COUNT(oj.jeepney_id) AS available_jeepney_count
-FROM operating_jeepney oj
-JOIN jeepney j ON oj.jeepney_id = j.jeepney_id
+FROM operating_jeepney AS oj
+JOIN jeepney AS j ON oj.jeepney_id = j.jeepney_id
 WHERE j.route_id = 'RAA0001'
 AND j.availability = TRUE;
 
@@ -17,7 +32,7 @@ WHERE account_id = (
     AND password = 'barry123');
 
 -- Get all LANDMARK associated with a route_id
-SELECT landmark
+SELECT landmark_name
 FROM landmark
 WHERE route_id = 'RAA0001';
 
@@ -37,11 +52,11 @@ SELECT EXISTS(
 	FROM passenger
 	WHERE account_id = 'AAA0001'
 	AND discount_type <> NULL) 
-as discount_legible;
+AS discount_legible;
 
 -- Get ENTRY_TIME, EXIT_TIME, and TOTAL_DISTANCE_TRAVELED from SEATING_ID
-SELECT entry_time, exit_time, total_distance_traveled
-FROM travel_information
+SELECT bi.entry_time, bi.exit_time, td.total_distance_traveled
+FROM boarding_information as bi, travel_distance AS td
 WHERE seating_id = 'AAAA0001';
 
 -- Get COORDINATES of PASSENGER
@@ -51,8 +66,8 @@ WHERE account_id = 'AAA0001';
 
 -- Get COORDINATES from driver_id
 SELECT a.coordinates
-FROM driver d
-JOIN account a ON d.account_id = a.account_id
+FROM driver AS d
+JOIN account AS a ON d.account_id = a.account_id
 WHERE d.driver_id = 'DAA0001';
 
 -- Get ACCOUNT_ID from email

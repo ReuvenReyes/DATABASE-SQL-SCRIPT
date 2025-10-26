@@ -5,13 +5,16 @@ USE pasahero_schema;
 -- Accounts
 INSERT INTO account (account_id, full_name, gender, gcash_number, coordinates)
 VALUES
-('AAA0001', 'Amira Dela Cruz', 'Female', '09170001122', '-14.6000, 120.9850'),
-('AAA0002', 'Sofia Lim', 'Female', '09181234567', '-14.6035, 121.0025'),
+('AAA0001', 'Amira C. Dela Cruz', 'Female', '09170001122', '-14.6000, 120.9850'),
+('AAA0002', 'Sofia F. Lim', 'Female', '09181234567', '-14.6035, 121.0025'),
 ('AAA0003', 'Ella Ramos', 'Female', '09081239876', '-14.6060, 121.0060'),
-('AAA0004', 'Noah Villanueva', 'Male', '09509751004', '-14.6011, 121.0001'),
+('AAA0004', 'Noah V. Villanueva', 'Male', '09509751004', '-14.6011, 121.0001'),
 ('AAA0005', 'Kenji Morales', 'Male', '09509071003', '-14.6045, 121.0042'),
 ('AAA0006', 'Wally Kanluran', 'Male', '09489657130', '-14.6006, 121.0007'),
-('AAA0007', 'Bartolome Alan', 'Male', '09990000002', '-14.6021, 120.9870');
+('AAA0007', 'Bartolome Alan', 'Male', '09990000002', '-14.6021, 120.9870'),
+('AAA0008', 'Pedro Perez', 'Male', '090896712240', '-14.6001, 120.9820'),
+('AAA0009', 'Kaiya Rosas', 'Female', '090869521204', '-14.6050, 120.9903'),
+('AAA0010', 'Elle Hinatsu', 'Other', '097693412670', '-14.6991, 120.9090');
 
 -- Login information
 INSERT INTO login_information (account_id, email, password)
@@ -22,7 +25,10 @@ VALUES
 ('AAA0004', 'noah.villanueva@example.com', 'noah123'),
 ('AAA0005', 'kenji.morales@example.com', 'kenji123'),
 ('AAA0006', 'wally.kanluran@example.com', 'wally123'),
-('AAA0007', 'bartoleme.alan@example.com', 'barry123');
+('AAA0007', 'bartoleme.alan@example.com', 'barry123'),
+('AAA0008', 'pedro.perez@example.com', 'pedro123'),
+('AAA0009', 'kaiya.rosas@example.com', 'kaiya123'),
+('AAA0010', 'elle.hinatsu@example.com', 'elle123');
 
 -- Route
 INSERT INTO route (route_id, route_name, city, available_jeepney_count, total_distance)
@@ -32,15 +38,6 @@ VALUES
 ('RAA0003', 'Lucena City Proper - Site', 'Lucena', 0, 4.70),
 ('RAA0004', 'Lucena - Lucban', 'Lucena', 0, 22.2),
 ('RAA0005', 'Cubao - Marikina', 'Quezon', 0, 4.00);
--- Fare
--- ?REMOVE?
-INSERT INTO fare (route_id, standard_amount, distance_threshold)
-VALUES
-('RAA0001', 13.00, 4),
-('RAA0002', 13.00, 4),
-('RAA0003', 13.00, 4),
-('RAA0004', 13.00, 4),
-('RAA0005', 13.00, 4);
 
 -- Landmarks
 INSERT INTO landmark (route_id, landmark_name)
@@ -76,7 +73,8 @@ VALUES
 ('JTA0003', 'MNL9012', 'trad', 'RAA0001', FALSE),
 ('JTA0004', 'CAB1122', 'trad', 'RAA0001', TRUE),
 ('JMA0001', 'KAI1400', 'modern', 'RAA0001', TRUE),
-('JMA0002', 'TOU0012', 'modern', 'RAA0001', FALSE);
+('JMA0002', 'TOU0012', 'modern', 'RAA0001', FALSE),
+('JMA0003', 'AKA0001', 'modern', 'RAA0002', TRUE);
 
 -- Driver
 INSERT INTO driver (driver_id, account_id)
@@ -84,7 +82,8 @@ VALUES
 ('DAA0001', 'AAA0004'),
 ('DAA0002', 'AAA0005'),
 ('DAA0003', 'AAA0006'),
-('DAA0004', 'AAA0007');
+('DAA0004', 'AAA0007'),
+('DAA0005', 'AAA0008');
 
 -- Driver contact
 INSERT INTO contact_detail (account_id, contact_number)
@@ -99,14 +98,17 @@ VALUES
 ('DAA0001', 'JTA0001'),
 ('DAA0002', 'JTA0002'),
 ('DAA0003', 'JTA0004'),
-('DAA0004', 'JMA0001');
+('DAA0004', 'JMA0001'),
+('DAA0005', 'JMA0003');
 
 -- Passenger
 INSERT INTO passenger (account_id, auto_pay_enabled, discount_type)
 VALUES
 ('AAA0001', TRUE, NULL),
 ('AAA0002', TRUE, 'student'),
-('AAA0003', FALSE, NULL);
+('AAA0003', FALSE, NULL),
+('AAA0009', TRUE, 'student'),
+('AAA0010', TRUE, 'student');
 
 -- -- Discount qualification
 -- INSERT INTO discount_qualification (passenger_id, type)
@@ -119,34 +121,51 @@ VALUES
 ('AAAA0001', 'AAA0001', 'JTA0001', FALSE),
 ('AAAA0002', 'AAA0001', 'JTA0002', FALSE),
 ('AAAA0003', 'AAA0002', 'JTA0002', FALSE),
-('AAAA0004', 'AAA0003', 'JTA0002', TRUE);
+('AAAA0004', 'AAA0003', 'JTA0002', TRUE),
+('AAAA0005', 'AAA0009', 'JTA0002', FALSE),
+('AAAA0006', 'AAA0010', 'JTA0002', FALSE);
 
 -- Payment
-INSERT INTO payment (seating_id, gcash_reference_number, time_paid, amount)
+INSERT INTO payment (seating_id, gcash_reference_number, time_paid, amount_due)
 VALUES
 ('AAAA0001', NULL, NULL, 13.00),
-('AAAA0002', '912834745', NOW(), 13.00),
+('AAAA0002', NULL, NULL, 13.00),
 ('AAAA0003', '413934832', NOW(), 11.00),
-('AAAA0004', NULL, NOW(), 0.00);
+('AAAA0004', NULL, NOW(), 0.00),
+('AAAA0005', '912834745', NOW(), 13.00),
+('AAAA0006', NULL, NULL, 13.00);
 
--- Travel information
-INSERT INTO travel_information (seating_id, entry_time, entry_coordinate, exit_time, exit_coordinate, total_distance_traveled)
+-- Boarding information
+INSERT INTO boarding_information (seating_id, entry_time, entry_coordinate, exit_time, exit_coordinate)
 VALUES
-('AAAA0001', NOW(), '-14.6000, 120.9850', NULL, NULL, 1.5),
-('AAAA0002', NOW(), '-14.6035, 121.0025', NOW(), '-14.6069, 121.0005', 3.8),
-('AAAA0003', NOW(), '-14.6060, 121.0060', NULL, NULL, 1.3),
-('AAAA0004', NOW(), '-14.6060, 121.0060', NULL, NULL, 1.3);
+('AAAA0001', NOW(), '-14.6000, 120.9850', NULL, NULL),
+('AAAA0002', NOW(), '-14.6000, 120.9850', NULL, NULL),
+('AAAA0003', NOW(), '-14.6060, 121.0060', NOW(), '-14.6960, 121.0050'),
+('AAAA0004', NOW(), '-14.6060, 121.0060', NULL, NULL),
+('AAAA0005', NOW(), '-14.6035, 121.0025', NOW(), '-14.6069, 121.0005'),
+('AAAA0006', NOW(), '-14.6035, 121.0025', NULL, NULL);
 
+-- Travel distance
+INSERT INTO travel_distance (seating_id, total_distance_traveled) 
+VALUES
+('AAAA0001', 2.30),
+('AAAA0002', 1.35),
+('AAAA0003', 0.85),
+('AAAA0004', 1.20),
+('AAAA0005', 1.55),
+('AAAA0006', 1.55);
 
--- UPDATE ROUTE.available_jeepney_count
-UPDATE ROUTE
+-- UPDATE all ROUTE.available_jeepney_count
+SET SQL_SAFE_UPDATES = 0;
+UPDATE ROUTE as r
 SET available_jeepney_count = (
 	SELECT COUNT(oj.jeepney_id)
 	FROM operating_jeepney oj
 	JOIN jeepney j ON oj.jeepney_id = j.jeepney_id
-	WHERE j.route_id = 'ROU0001'
-	AND j.availability = TRUE)
-WHERE route_id = 'ROU0001';
+	WHERE j.route_id = r.route_id
+	AND j.availability = TRUE);
+SET SQL_SAFE_UPDATES = 1;
+    
 -- Check data
 
 SELECT * FROM account;
@@ -159,7 +178,8 @@ SELECT * FROM operating_jeepney;
 SELECT * FROM passenger;
 SELECT * FROM seating;
 SELECT * FROM payment;
-SELECT * FROM travel_information;
+SELECT * FROM boarding_information;
+SELECT * FROM travel_distance;
 SELECT * FROM fare;
 SELECT * FROM landmark;
 

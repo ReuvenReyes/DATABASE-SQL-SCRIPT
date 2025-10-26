@@ -30,15 +30,6 @@ CREATE TABLE route (
   total_distance DECIMAL(5,2)
 );
 
--- FARE TABLE
-CREATE TABLE fare (
-  route_id VARCHAR(7) PRIMARY KEY,
-  standard_amount DECIMAL(5,2) NOT NULL,
-  distance_threshold DECIMAL(5,2),
-  FOREIGN KEY (route_id) REFERENCES route(route_id)
-    ON DELETE CASCADE ON UPDATE CASCADE
-);
-
 -- LANDMARK TABLE
 CREATE TABLE landmark (
   route_id VARCHAR(7) NOT NULL,
@@ -99,15 +90,6 @@ CREATE TABLE passenger (
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- -- DISCOUNT QUALIFICATION TABLE
--- CREATE TABLE discount_qualification (
---   passenger_id VARCHAR(7) PRIMARY KEY,
---   type ENUM('student', 'senior', 'disability') VARCHAR(32),
---   FOREIGN KEY (passenger_id) REFERENCES passenger(passenger_id)
---     ON DELETE CASCADE ON UPDATE CASCADE
--- );
-
-
 -- SEATING TABLE
 CREATE TABLE seating (
   seating_id VARCHAR(8) PRIMARY KEY, 
@@ -125,19 +107,26 @@ CREATE TABLE payment (
   seating_id VARCHAR(8) PRIMARY KEY,
   gcash_reference_number VARCHAR(16),
   time_paid DATETIME,
-  amount DECIMAL(5,2),
+  amount_due DECIMAL(5,2),
   FOREIGN KEY (seating_id) REFERENCES seating(seating_id)
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- TRAVEL INFORMATION TABLE
-CREATE TABLE travel_information (
+-- BOARDING INFORMATION TABLE
+CREATE TABLE boarding_information (
   seating_id VARCHAR(8) PRIMARY KEY,
   entry_time DATETIME,
   entry_coordinate VARCHAR(255),
   exit_time DATETIME,
   exit_coordinate VARCHAR(255),
-  total_distance_traveled DECIMAL(5,2),
+  FOREIGN KEY (seating_id) REFERENCES seating(seating_id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- TRAVEL DISTANCE
+CREATE TABLE travel_distance (
+	seating_id VARCHAR(8) PRIMARY KEY,
+    total_distance_traveled DECIMAL(5,2),
   FOREIGN KEY (seating_id) REFERENCES seating(seating_id)
     ON DELETE CASCADE ON UPDATE CASCADE
 );
