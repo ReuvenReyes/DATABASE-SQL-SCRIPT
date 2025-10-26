@@ -30,6 +30,4 @@ WHERE s.jeepney_id = 'JTA0002'
 AND bi.exit_time IS NULL
 ORDER BY time_paid;
 
--- 
-
 SELECT * FROM seating_and_payment_status_JTA0002;

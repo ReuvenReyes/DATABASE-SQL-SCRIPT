@@ -180,6 +180,5 @@ SELECT * FROM seating;
 SELECT * FROM payment;
 SELECT * FROM boarding_information;
 SELECT * FROM travel_distance;
-SELECT * FROM fare;
 SELECT * FROM landmark;
 
